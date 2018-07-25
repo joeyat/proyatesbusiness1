@@ -5,6 +5,7 @@ $requestBody = Get-Content $req -Raw | ConvertFrom-Json
 $GroupName = $requestBody.GroupName
 $upn = $requestBody.upn
 $description = $requestBody.description
+$user2
 
 # Make email address safe...
 $EMail = $GroupName.Trim().Replace(" ","-")
@@ -136,6 +137,36 @@ try {
 
 
 # add user as Member
+try {
+    $result = Invoke-RestMethod -Method Post `
+                            -Uri "https://graph.microsoft.com/v1.0/groups/$GroupID/members/`$ref" `
+                            -ContentType 'application/json' `
+                            -Headers $script:APIHeader `
+                            -Body $json `
+                            -ErrorAction Stop
+    Write-Output "Added member: $GroupID"
+} catch {
+    Write-Output "ERROR! $_"
+}
+
+# Get the User ID
+try {
+    $user2Object = Invoke-RestMethod -Method Get `
+                            -Uri "https://graph.microsoft.com/v1.0/users/$user2" `
+                            -ContentType 'application/json' `
+                            -Headers $script:APIHeader `
+                            -ErrorAction Stop
+    Write-Output $user2Object.UserPrincipalName
+} catch {
+    Write-Output "ERROR! $_"
+}
+
+# add user2 as Member
+$json = @"
+{ "@odata.id": "https://graph.microsoft.com/v1.0/users/$($user2Object.id)" }
+"@
+
+
 try {
     $result = Invoke-RestMethod -Method Post `
                             -Uri "https://graph.microsoft.com/v1.0/groups/$GroupID/members/`$ref" `
