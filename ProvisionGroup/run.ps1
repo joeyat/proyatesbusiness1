@@ -153,4 +153,4 @@ try {
 # return value
 Out-File -Encoding Ascii -FilePath $res -inputObject $msg
 Write-Output $msg
-Write-Output $GroupID
+
