@@ -5,7 +5,7 @@ $requestBody = Get-Content $req -Raw | ConvertFrom-Json
 $GroupName = $requestBody.GroupName
 $upn = $requestBody.upn
 $description = $requestBody.description
-$user2
+$user2 = $requestBody.user2
 
 # Make email address safe...
 $EMail = $GroupName.Trim().Replace(" ","-")
